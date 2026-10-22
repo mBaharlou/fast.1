@@ -1,0 +1,472 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700;800&display=swap");
+
+/* ---------- Design tokens ---------- */
+:root {
+    --orange: rgb(255, 148, 29);
+    --orange-deep: rgb(204, 108, 0);
+    --orange-light: rgb(255, 196, 130);
+    --dark: rgb(31, 39, 42);
+    --dark-deep: rgb(19, 24, 26);
+    --dark-light: rgb(58, 70, 75);
+    --white: #ffffff;
+    --off-white: #fff7ee;
+
+    /* Hard 50/50 split, and its mirror for text that crosses the middle */
+    --split: linear-gradient(to right, var(--orange) 50%, var(--dark) 50%);
+    --split-inverse: linear-gradient(to right, var(--dark) 50%, var(--orange) 50%);
+
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+
+    --radius: 18px;
+    --shadow-on-orange: 0 12px 30px rgba(122, 58, 0, 0.35);
+    --shadow-on-orange-lg: 0 22px 45px rgba(122, 58, 0, 0.45);
+    --shadow-on-dark: 0 12px 30px rgba(0, 0, 0, 0.45);
+    --shadow-on-dark-lg: 0 22px 45px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 148, 29, 0.4);
+    --transition: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Global / body / .container ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: clip;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--white);
+    /* Propagates to the canvas, so the split covers the full page height on scroll and resize */
+    background: var(--split);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: var(--orange);
+    color: var(--dark);
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Full-bleed backgrounds for elements inside the centered container */
+.title,
+.footer {
+    box-shadow: 0 0 0 100vmax var(--full-bleed-bg);
+    clip-path: inset(0 -100vmax);
+    background: var(--full-bleed-bg);
+}
+
+/*
+ * Text centered on the split: fill the glyphs with the mirrored split so
+ * each half is dark on orange and orange on dark. The container is centered,
+ * so 50% of these full-width blocks lines up with the page's middle line.
+ */
+.welcome-title,
+.product-title {
+    background: var(--split-inverse);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* ---------- Top title (announcement bar) ---------- */
+.title {
+    --full-bleed-bg: var(--dark-deep);
+    margin: 0;
+    padding: 10px 0;
+    text-align: center;
+    color: var(--orange);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 76px;
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(to right, rgba(31, 39, 42, 0.3) 50%, rgba(255, 148, 29, 0.3) 50%) 1;
+}
+
+.nav-logo {
+    order: -1; /* logo comes after the list in the markup; show it first */
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--orange);
+    box-shadow: 0 0 0 2px var(--dark), var(--shadow-on-orange);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.nav-logo:hover {
+    transform: rotate(-6deg) scale(1.05);
+    box-shadow: 0 0 0 2px var(--dark), 0 0 0 6px rgba(31, 39, 42, 0.25), var(--shadow-on-orange-lg);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-item a {
+    position: relative;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--transition), background-color var(--transition);
+}
+
+.nav-item a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--dark);
+    transform: translateX(-50%);
+    transition: width var(--transition);
+}
+
+.nav-item a:hover,
+.nav-item a:focus-visible {
+    color: var(--dark);
+    background: var(--orange);
+    outline: none;
+}
+
+.nav-item a:hover::after,
+.nav-item a:focus-visible::after {
+    width: 40%;
+}
+
+/* ---------- Main / About ---------- */
+.main-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 62vh;
+    padding: 72px 0;
+}
+
+.welcome-section {
+    max-width: 680px;
+    text-align: center;
+}
+
+.welcome-title {
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 10vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+    /* text-shadow would paint over a background-clipped fill, so the shadow is a drop-shadow */
+    filter:
+        drop-shadow(0 2px 0 rgba(19, 24, 26, 0.35))
+        drop-shadow(0 12px 22px rgba(19, 24, 26, 0.45));
+    animation:
+        slide-up 1s var(--transition) both,
+        float 6s ease-in-out 1s infinite;
+}
+
+.welcome-text {
+    margin: 0 auto;
+    max-width: 52ch;
+    /* Semi-transparent white so the card and split show through the letters */
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.8;
+    /* Raised see-through card behind the text; the split shows through it */
+    padding: 22px 28px;
+    background: rgba(31, 39, 42, 0.3);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius);
+    box-shadow:
+        0 4px 10px rgba(19, 24, 26, 0.25),
+        0 18px 40px rgba(19, 24, 26, 0.45);
+    transition: translate var(--transition), box-shadow var(--transition);
+    animation: slide-up 1s var(--transition) 0.25s both;
+}
+
+/* `translate`, not `transform`: the finished slide-up animation keeps holding transform */
+.welcome-text:hover {
+    translate: 0 -4px;
+    box-shadow:
+        0 6px 14px rgba(19, 24, 26, 0.3),
+        0 26px 50px rgba(19, 24, 26, 0.55);
+}
+
+.welcome-text::first-letter {
+    text-transform: uppercase;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ---------- Products ---------- */
+.product-section {
+    padding: 24px 0 96px;
+}
+
+.product-title {
+    position: relative;
+    margin: 0 0 48px;
+    padding-bottom: 16px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+}
+
+.product-title::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 64px;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--dark) 50%, var(--orange) 50%);
+    transform: translateX(-50%);
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.product-item:hover {
+    transform: translateY(-6px);
+}
+
+/* Left column sits on orange: dark card */
+.product-item:nth-child(odd) {
+    background: var(--dark);
+    border-color: rgba(255, 255, 255, 0.06);
+    color: var(--off-white);
+    box-shadow: var(--shadow-on-orange);
+}
+
+.product-item:nth-child(odd):hover {
+    box-shadow: var(--shadow-on-orange-lg);
+}
+
+/* Right column sits on dark: orange card */
+.product-item:nth-child(even) {
+    background: var(--orange);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--dark);
+    box-shadow: var(--shadow-on-dark);
+}
+
+.product-item:nth-child(even):hover {
+    box-shadow: var(--shadow-on-dark-lg);
+}
+
+.product-item img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: calc(var(--radius) - 6px);
+    transition: transform var(--transition);
+}
+
+.product-item h3 {
+    margin: 20px 8px 6px;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.product-item:nth-child(odd) h3 {
+    color: var(--orange);
+}
+
+.product-item:nth-child(even) h3 {
+    color: var(--dark-deep);
+}
+
+.product-item p {
+    margin: 0 8px 8px;
+    font-size: 0.975rem;
+}
+
+.product-item:nth-child(odd) p {
+    color: rgba(255, 247, 238, 0.75);
+}
+
+.product-item:nth-child(even) p {
+    color: rgba(19, 24, 26, 0.8);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    --full-bleed-bg: var(--dark-deep);
+    margin-top: auto;
+    padding: 48px 0 32px;
+    text-align: center;
+    color: rgba(255, 247, 238, 0.7);
+}
+
+/* Footer title, drawn by CSS since the markup only has the paragraph */
+.footer::before {
+    content: "Mohammad Baharlou";
+    display: block;
+    margin-bottom: 14px;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--orange);
+}
+
+.footer p {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 148, 29, 0.2);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+/*
+ * The left/right split is kept on mobile: the crossing text inverts per half,
+ * and the single-column cards are solid, so everything stays readable no
+ * matter where the middle line falls.
+ */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 16px;
+    }
+
+    .main-content {
+        min-height: 50vh;
+        padding: 56px 0;
+    }
+
+    .product-list {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    /* Cards now straddle both halves: outline them so their edges show on either side */
+    .product-item:nth-child(odd) {
+        border-color: rgba(255, 148, 29, 0.4);
+    }
+
+    .product-item:nth-child(even) {
+        border-color: rgba(31, 39, 42, 0.4);
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 64px;
+        gap: 12px;
+    }
+
+    .nav-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .nav-links {
+        gap: 10px;
+    }
+
+    .nav-item a {
+        padding: 6px 10px;
+        font-size: 0.875rem;
+    }
+
+    .welcome-text {
+        font-size: 1rem;
+    }
+
+    .product-section {
+        padding-bottom: 64px;
+    }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
